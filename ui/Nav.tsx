@@ -28,12 +28,15 @@ export function Nav() {
     <nav className="flex items-center gap-3">
       {showMeta ? (
         <div
-          className="hidden items-center gap-2 text-xs font-semibold text-slate-500 sm:flex"
+          className="flex items-center gap-2 text-xs font-semibold text-slate-500"
           title={buildSha ? `Build: ${buildSha}` : undefined}
         >
-          {version ? <span>v{version}</span> : null}
-          {version && buildDate ? <span className="text-slate-300">•</span> : null}
-          {buildDate ? <span>{buildDate}</span> : null}
+          <span className="sm:hidden">{buildDate || (version ? `v${version}` : "")}</span>
+          <span className="hidden sm:inline">
+            {version ? `v${version}` : ""}
+            {version && buildDate ? " | " : ""}
+            {buildDate || ""}
+          </span>
         </div>
       ) : null}
 
