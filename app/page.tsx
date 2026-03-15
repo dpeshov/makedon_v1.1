@@ -12,7 +12,7 @@ export default function Home() {
             Find Macedonian diaspora businesses and clubs.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700">
-            Browse curated listings by segment, or register your own — submissions are reviewed by an admin before they
+            Browse curated listings by segment, or register your own. Submissions are reviewed by an admin before they
             appear publicly.
           </p>
 
