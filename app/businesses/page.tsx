@@ -6,8 +6,6 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-const NON_BUSINESS_INDUSTRIES = ["Cultural Club", "Sport Club"] as const;
-
 export default function BusinessesPage({ searchParams }: { searchParams: Record<string, string | string[] | undefined> }) {
   const params = searchParams as {
     q?: string;
@@ -24,7 +22,10 @@ export default function BusinessesPage({ searchParams }: { searchParams: Record<
       basePath="/businesses"
       registerHref="/register/business"
       allowDemoFallback
-      industry={{ picker: true, excludeIndustries: [...NON_BUSINESS_INDUSTRIES] }}
+      industry={{ picker: true }}
+      table="businesses"
+      nameColumn="company_name"
+      cardKind="business"
       searchParams={params}
     />
   );

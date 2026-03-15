@@ -5,8 +5,6 @@ import { cleanText, isValidEmail, normalizeUrl } from "@/lib/validators";
 
 export const runtime = "nodejs";
 
-const SPECIAL_LISTING_TYPES = ["Cultural Club", "Sport Club"] as const;
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -38,11 +36,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
     }
 
-    const isValidIndustry =
-      INDUSTRIES.includes(industry as (typeof INDUSTRIES)[number]) ||
-      SPECIAL_LISTING_TYPES.includes(industry as (typeof SPECIAL_LISTING_TYPES)[number]);
-
-    if (!isValidIndustry) return NextResponse.json({ error: "Please select a valid industry." }, { status: 400 });
+    if (!INDUSTRIES.includes(industry as (typeof INDUSTRIES)[number])) {
+      return NextResponse.json({ error: "Please select a valid industry." }, { status: 400 });
+    }
 
     const supabase = supabaseAdmin();
     const { error } = await supabase.from("businesses").insert({

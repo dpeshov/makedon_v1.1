@@ -5,6 +5,8 @@ import { DEMO_BUSINESSES } from "@/lib/demoBusinesses";
 import { BusinessCard } from "@/ui/BusinessCard";
 import { Button, ButtonLink } from "@/ui/Button";
 import { Surface } from "@/ui/Surface";
+import { CulturalClubCard } from "@/ui/CulturalClubCard";
+import { SportClubCard } from "@/ui/SportClubCard";
 
 type SearchParams = {
   q?: string;
@@ -25,6 +27,9 @@ type DirectoryProps = {
     fixedIndustry?: string;
     excludeIndustries?: string[];
   };
+  table: "businesses" | "cultural_clubs" | "sport_clubs";
+  nameColumn: string;
+  cardKind: "business" | "cultural-club" | "sport-club";
   searchParams: SearchParams;
 };
 
@@ -39,6 +44,9 @@ export async function Directory({
   registerHref = "/register",
   allowDemoFallback = false,
   industry,
+  table,
+  nameColumn,
+  cardKind,
   searchParams
 }: DirectoryProps) {
   const q = (searchParams.q ?? "").trim();
@@ -55,10 +63,8 @@ export async function Directory({
   try {
     const supabase = supabaseAdmin();
     let query = supabase
-      .from("businesses")
-      .select(
-        "id, company_name, industry, sub_industry, country, city, address, phone, other_locations, locations_description, description, offerings, offerings_description, website, created_at"
-      )
+      .from(table)
+      .select("*")
       .order("created_at", { ascending: false })
       .limit(200);
 
@@ -68,7 +74,7 @@ export async function Directory({
       query = query.not("industry", "in", `(${list})`);
     }
 
-    if (q) query = query.ilike("company_name", `%${q}%`);
+    if (q) query = query.ilike(nameColumn, `%${q}%`);
     if (country) query = query.ilike("country", `%${country}%`);
     if (city) query = query.ilike("city", `%${city}%`);
     if (showIndustryPicker && selectedIndustry) query = query.eq("industry", selectedIndustry);
@@ -191,9 +197,11 @@ export async function Directory({
         </Surface>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
-          {list.map((b) => (
-            <BusinessCard key={b.id} business={b} />
-          ))}
+          {list.map((row) => {
+            if (cardKind === "cultural-club") return <CulturalClubCard key={row.id} club={row} />;
+            if (cardKind === "sport-club") return <SportClubCard key={row.id} club={row} />;
+            return <BusinessCard key={row.id} business={row} />;
+          })}
         </div>
       )}
     </div>

@@ -20,7 +20,9 @@ export default function SportClubsPage({ searchParams }: { searchParams: Record<
       description="Browse Macedonian sport clubs around the world."
       basePath="/sport-clubs"
       registerHref="/register/sport-club"
-      industry={{ fixedIndustry: "Sport Club" }}
+      table="sport_clubs"
+      nameColumn="club_name"
+      cardKind="sport-club"
       searchParams={params}
     />
   );

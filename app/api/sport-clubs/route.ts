@@ -1,0 +1,62 @@
+import { NextResponse } from "next/server";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { cleanText, isValidEmail, normalizeUrl } from "@/lib/validators";
+
+export const runtime = "nodejs";
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+
+    const club_name = cleanText(body.club_name, 140);
+    const contact_name = cleanText(body.contact_name, 120);
+    const country = cleanText(body.country, 80);
+    const city = cleanText(body.city, 80);
+    const sport = cleanText(body.sport, 80);
+    const description = cleanText(body.description, 900);
+
+    const phone = cleanText(body.phone, 40);
+    const address = cleanText(body.address, 180);
+    const website = normalizeUrl(cleanText(body.website, 200));
+    const email = cleanText(body.email, 180).toLowerCase();
+
+    const training_schedule = cleanText(body.training_schedule, 400);
+    const age_groups = cleanText(body.age_groups, 200);
+    const league = cleanText(body.league, 200);
+    const facebook = normalizeUrl(cleanText(body.facebook, 200));
+    const instagram = normalizeUrl(cleanText(body.instagram, 200));
+
+    if (!club_name || !contact_name || !country || !city || !sport || !description || !email) {
+      return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
+    }
+
+    if (!isValidEmail(email)) {
+      return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
+    }
+
+    const supabase = supabaseAdmin();
+    const { error } = await supabase.from("sport_clubs").insert({
+      club_name,
+      contact_name,
+      country,
+      city,
+      sport,
+      description,
+      phone: phone || null,
+      address: address || null,
+      website: website || null,
+      email,
+      training_schedule: training_schedule || null,
+      age_groups: age_groups || null,
+      league: league || null,
+      facebook: facebook || null,
+      instagram: instagram || null
+    });
+
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  }
+}
+

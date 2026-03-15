@@ -24,7 +24,9 @@ export default function CulturalClubsPage({
       description="Browse Macedonian cultural clubs and associations around the world."
       basePath="/cultural-clubs"
       registerHref="/register/cultural-club"
-      industry={{ fixedIndustry: "Cultural Club" }}
+      table="cultural_clubs"
+      nameColumn="club_name"
+      cardKind="cultural-club"
       searchParams={params}
     />
   );
