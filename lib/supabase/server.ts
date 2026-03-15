@@ -7,8 +7,8 @@ function requiredEnv(name: string): string {
   return value;
 }
 
-export function supabaseServer() {
-  const cookieStore = cookies();
+export async function supabaseServer() {
+  const cookieStore = await cookies();
   const url = requiredEnv("NEXT_PUBLIC_SUPABASE_URL");
   const anonKey = requiredEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
 
@@ -18,9 +18,10 @@ export function supabaseServer() {
         return cookieStore.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        cookiesToSet.forEach(({ name, value, options }) =>
+          cookieStore.set(name, value, options)
+        );
       }
     }
   });
 }
-
