@@ -1,7 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-export async function middleware(req: NextRequest) {
+// Next.js 16+: `middleware.ts` is deprecated in favor of `proxy.ts`.
+// This keeps Supabase auth cookies refreshed for SSR.
+export async function proxy(req: NextRequest) {
   const res = NextResponse.next();
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
