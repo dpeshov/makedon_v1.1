@@ -5,11 +5,13 @@ import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Button } from "@/ui/Button";
 
-function formatBuildDate(value?: string) {
+function formatBuildStamp(value?: string) {
   if (!value) return "";
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
-  return parsed.toISOString().slice(0, 10);
+  const iso = parsed.toISOString(); // UTC
+  const stamp = iso.slice(0, 16).replace("T", " ");
+  return `${stamp} UTC`;
 }
 
 type NavItem = { href: string; label: string; match?: "exact" | "prefix" };
@@ -68,9 +70,9 @@ export function Nav() {
   );
 
   const version = process.env.NEXT_PUBLIC_APP_VERSION;
-  const buildDate = formatBuildDate(process.env.NEXT_PUBLIC_BUILD_DATE);
+  const buildStamp = formatBuildStamp(process.env.NEXT_PUBLIC_BUILD_DATE);
   const buildSha = process.env.NEXT_PUBLIC_BUILD_SHA;
-  const showMeta = Boolean(version || buildDate);
+  const showMeta = Boolean(version || buildStamp);
 
   return (
     <nav className="flex items-center gap-3">
@@ -82,7 +84,7 @@ export function Nav() {
           <span className="rounded-full border border-slate-900/10 bg-white/50 px-2 py-1">
             {version ? `v${version}` : "dev"}
           </span>
-          {buildDate ? <span className="text-slate-400">{buildDate}</span> : null}
+          {buildStamp ? <span className="text-slate-400">{buildStamp}</span> : null}
         </div>
       ) : null}
 
