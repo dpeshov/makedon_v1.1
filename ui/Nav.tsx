@@ -42,6 +42,9 @@ export function Nav() {
 
       <div className="flex items-center gap-1">
         <NavLink href="/" label="Home" />
+        <NavLink href="/businesses" label="Businesses" />
+        <NavLink href="/cultural-clubs" label="Cultural clubs" />
+        <NavLink href="/sport-clubs" label="Sport clubs" />
         <NavLink href="/register" label="Register" />
         <NavLink href="/about" label="About" />
       </div>

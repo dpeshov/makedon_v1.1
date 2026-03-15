@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { INDUSTRIES } from "@/lib/industries";
 
+type RegisterKind = "business" | "cultural-club" | "sport-club";
+
 type FormState = {
   company_name: string;
   owner_name: string;
@@ -22,27 +24,59 @@ type FormState = {
   email: string;
 };
 
-const emptyState: FormState = {
-  company_name: "",
-  owner_name: "",
-  country: "",
-  city: "",
-  industry: INDUSTRIES[0] ?? "Other",
-  sub_industry: "",
-  description: "",
-  phone: "",
-  address: "",
-  other_locations: "",
-  locations_description: "",
-  offerings: "",
-  offerings_description: "",
-  website: "",
-  email: ""
-};
+function kindConfig(kind: RegisterKind) {
+  if (kind === "cultural-club") {
+    return {
+      title: "cultural club",
+      fixedIndustry: "Cultural Club",
+      redirectTo: "/cultural-clubs",
+      nameLabel: "Club name",
+      namePlaceholder: "Example: Macedonian Cultural Association"
+    };
+  }
+  if (kind === "sport-club") {
+    return {
+      title: "sport club",
+      fixedIndustry: "Sport Club",
+      redirectTo: "/sport-clubs",
+      nameLabel: "Club name",
+      namePlaceholder: "Example: Macedonian Sports Club"
+    };
+  }
+  return {
+    title: "business",
+    fixedIndustry: null,
+    redirectTo: "/businesses",
+    nameLabel: "Company name",
+    namePlaceholder: "Example: Balkan Bites"
+  };
+}
 
-export function RegisterForm() {
+function emptyStateFor(kind: RegisterKind): FormState {
+  const cfg = kindConfig(kind);
+  return {
+    company_name: "",
+    owner_name: "",
+    country: "",
+    city: "",
+    industry: cfg.fixedIndustry ?? (INDUSTRIES[0] ?? "Other"),
+    sub_industry: "",
+    description: "",
+    phone: "",
+    address: "",
+    other_locations: "",
+    locations_description: "",
+    offerings: "",
+    offerings_description: "",
+    website: "",
+    email: ""
+  };
+}
+
+export function RegisterForm({ kind = "business" }: { kind?: RegisterKind }) {
   const router = useRouter();
-  const [state, setState] = useState<FormState>(emptyState);
+  const cfg = kindConfig(kind);
+  const [state, setState] = useState<FormState>(() => emptyStateFor(kind));
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,8 +107,8 @@ export function RegisterForm() {
       const data = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok) throw new Error(data.error || "Something went wrong.");
 
-      setState(emptyState);
-      router.push("/?registered=1");
+      setState(emptyStateFor(kind));
+      router.push(`${cfg.redirectTo}?registered=1`);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
@@ -99,12 +133,12 @@ export function RegisterForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelClassName()}>
-            Company name
+            {cfg.nameLabel}
             <input
               className={inputClassName()}
               value={state.company_name}
               onChange={(e) => setState((s) => ({ ...s, company_name: e.target.value }))}
-              placeholder="Example: Balkan Bites"
+              placeholder={cfg.namePlaceholder}
               required
             />
           </label>
@@ -146,31 +180,35 @@ export function RegisterForm() {
           </label>
         </div>
 
+        {cfg.fixedIndustry ? (
+          <input type="hidden" value={state.industry} name="industry" />
+        ) : (
+          <div>
+            <label className={labelClassName()}>
+              Industry
+              <select
+                className={inputClassName()}
+                value={state.industry}
+                onChange={(e) => setState((s) => ({ ...s, industry: e.target.value }))}
+                required
+              >
+                {INDUSTRIES.map((industry) => (
+                  <option key={industry} value={industry}>
+                    {industry}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        )}
         <div>
           <label className={labelClassName()}>
-            Industry
-            <select
-              className={inputClassName()}
-              value={state.industry}
-              onChange={(e) => setState((s) => ({ ...s, industry: e.target.value }))}
-              required
-            >
-              {INDUSTRIES.map((industry) => (
-                <option key={industry} value={industry}>
-                  {industry}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div>
-          <label className={labelClassName()}>
-            Sub-industry (optional)
+            {cfg.fixedIndustry ? "Type / focus (optional)" : "Sub-industry (optional)"}
             <input
               className={inputClassName()}
               value={state.sub_industry}
               onChange={(e) => setState((s) => ({ ...s, sub_industry: e.target.value }))}
-              placeholder="Example: Bakery, IT Consulting"
+              placeholder={cfg.fixedIndustry ? "Example: Folklore, language school" : "Example: Bakery, IT Consulting"}
             />
           </label>
         </div>
@@ -297,7 +335,7 @@ export function RegisterForm() {
           disabled={!canSubmit || pending}
           className="rounded-full bg-brand-red px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-red/90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {pending ? "Submitting..." : "Submit business"}
+          {pending ? "Submitting..." : `Submit ${cfg.title}`}
         </button>
         <p className="text-xs text-slate-500">
           Email/owner name are stored for contact. They are not shown on the public directory in this MVP.

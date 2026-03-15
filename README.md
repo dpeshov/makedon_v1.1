@@ -78,8 +78,14 @@ Security note:
 
 ## Pages
 
-- `/` Home: search by company name and filter by country/city/industry.
-- `/register` Register: submits a business to Supabase.
+- `/` Home: setup + database status.
+- `/businesses` Businesses: search/filter the business directory.
+- `/cultural-clubs` Cultural clubs listing.
+- `/sport-clubs` Sport clubs listing.
+- `/register` Register: pick what to register.
+- `/register/business` Register business.
+- `/register/cultural-club` Register cultural club.
+- `/register/sport-club` Register sport club.
 - `/about` About: short project explanation.
 
 ## Deploy To Vercel
