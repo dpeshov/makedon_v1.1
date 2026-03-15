@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
 import { cleanText, isValidEmail, normalizeUrl } from "@/lib/validators";
+import { supabaseServer } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
+    const supabase = supabaseServer();
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) return NextResponse.json({ error: "Please sign in to submit." }, { status: 401 });
+
     const body = await req.json();
 
     const club_name = cleanText(body.club_name, 140);
@@ -34,8 +38,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
     }
 
-    const supabase = supabaseAdmin();
     const { error } = await supabase.from("sport_clubs").insert({
+      user_id: data.user.id,
       club_name,
       contact_name,
       country,
@@ -50,7 +54,8 @@ export async function POST(req: Request) {
       age_groups: age_groups || null,
       league: league || null,
       facebook: facebook || null,
-      instagram: instagram || null
+      instagram: instagram || null,
+      approval_status: "pending"
     });
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });

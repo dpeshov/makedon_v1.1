@@ -25,7 +25,7 @@ function Row({ label, value }: { label: string; value: string | null | undefined
 
 export function CulturalClubCard({ club }: { club: CulturalClubPublic }) {
   return (
-    <Surface className="group p-5 transition hover:-translate-y-0.5 hover:shadow-md">
+    <Surface className="group p-5 ring-slate-900/15 transition hover:-translate-y-0.5 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h3 className="truncate text-lg font-semibold tracking-tight text-slate-900">{club.club_name}</h3>
@@ -62,4 +62,3 @@ export function CulturalClubCard({ club }: { club: CulturalClubPublic }) {
     </Surface>
   );
 }
-

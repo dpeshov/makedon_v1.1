@@ -61,7 +61,8 @@ export function Nav() {
       { href: "/cultural-clubs", label: "Cultural clubs" },
       { href: "/sport-clubs", label: "Sport clubs" },
       { href: "/register", label: "Register" },
-      { href: "/about", label: "About" }
+      { href: "/info", label: "Info" },
+      { href: "/account", label: "Account" }
     ],
     []
   );
@@ -131,4 +132,3 @@ export function Nav() {
     </nav>
   );
 }
-

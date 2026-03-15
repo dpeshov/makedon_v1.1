@@ -16,7 +16,8 @@ insert into public.businesses (
   offerings,
   offerings_description,
   website,
-  email
+  email,
+  approval_status
 ) values
 (
   'Skopje Street Bakery',
@@ -33,7 +34,8 @@ insert into public.businesses (
   'Burek, kifli, cakes, catering',
   'Custom orders for events, corporate catering, and weekly delivery boxes.',
   'https://example.com/bakery',
-  'demo1@diaspora.example'
+  'demo1@diaspora.example',
+  'approved'
 ),
 (
   'Ohrid Lake Travel Co.',
@@ -50,7 +52,8 @@ insert into public.businesses (
   'Flight + hotel planning, guided tours, group travel',
   'Personalized planning with flexible budgets and bilingual support.',
   'https://example.com/travel',
-  'demo2@diaspora.example'
+  'demo2@diaspora.example',
+  'approved'
 ),
 (
   'Vardar IT Studio',
@@ -67,7 +70,8 @@ insert into public.businesses (
   'Web apps, landing pages, integrations',
   'Next.js builds, Supabase backends, and quick MVP delivery.',
   'https://example.com/it',
-  'demo3@diaspora.example'
+  'demo3@diaspora.example',
+  'approved'
 ),
 (
   'Diaspora Accounting & Tax',
@@ -84,7 +88,8 @@ insert into public.businesses (
   'Bookkeeping, BAS/GST, payroll',
   'Monthly packages and one-off advisory sessions.',
   'https://example.com/accounting',
-  'demo4@diaspora.example'
+  'demo4@diaspora.example',
+  'approved'
 ),
 (
   'Bitola Builders',
@@ -101,7 +106,8 @@ insert into public.businesses (
   'Renovations, tiling, drywall, painting',
   'Free estimates and transparent timelines.',
   'https://example.com/builders',
-  'demo5@diaspora.example'
+  'demo5@diaspora.example',
+  'approved'
 ),
 (
   'Tetovo Fitness Club',
@@ -118,7 +124,8 @@ insert into public.businesses (
   'Personal training, group classes, nutrition coaching',
   'Beginner-friendly programs and flexible memberships.',
   'https://example.com/fitness',
-  'demo6@diaspora.example'
+  'demo6@diaspora.example',
+  'approved'
 ),
 (
   'Sun of Macedonia Imports',
@@ -135,7 +142,8 @@ insert into public.businesses (
   'Import, warehousing, last-mile distribution',
   'Cold-chain options available on request.',
   'https://example.com/imports',
-  'demo7@diaspora.example'
+  'demo7@diaspora.example',
+  'approved'
 ),
 (
   'Krushevo Crafts',
@@ -152,7 +160,8 @@ insert into public.businesses (
   'Decor, gifts, custom pieces',
   'Small-batch releases and custom commissions.',
   'https://example.com/crafts',
-  'demo8@diaspora.example'
+  'demo8@diaspora.example',
+  'approved'
 ),
 (
   'Pelister Real Estate',
@@ -169,7 +178,8 @@ insert into public.businesses (
   'Rentals, sales support, property management',
   'Bilingual coordination and trusted local partners.',
   'https://example.com/realestate',
-  'demo9@diaspora.example'
+  'demo9@diaspora.example',
+  'approved'
 ),
 (
   'Strumica Retail & Deli',
@@ -186,5 +196,6 @@ insert into public.businesses (
   'Groceries, deli, gift baskets',
   'Corporate gifts and seasonal baskets available.',
   'https://example.com/deli',
-  'demo10@diaspora.example'
+  'demo10@diaspora.example',
+  'approved'
 );

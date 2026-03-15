@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { supabaseAdmin } from "@/lib/supabase/admin";
 import { INDUSTRIES } from "@/lib/industries";
 import { DEMO_BUSINESSES } from "@/lib/demoBusinesses";
 import { BusinessCard } from "@/ui/BusinessCard";
@@ -7,6 +6,7 @@ import { Button, ButtonLink } from "@/ui/Button";
 import { Surface } from "@/ui/Surface";
 import { CulturalClubCard } from "@/ui/CulturalClubCard";
 import { SportClubCard } from "@/ui/SportClubCard";
+import { supabaseServer } from "@/lib/supabase/server";
 
 type SearchParams = {
   q?: string;
@@ -61,10 +61,18 @@ export async function Directory({
   let error: { message: string } | null = null;
 
   try {
-    const supabase = supabaseAdmin();
+    const supabase = supabaseServer();
+
+    const select =
+      cardKind === "cultural-club"
+        ? "id, club_name, country, city, description, phone, address, website, focus_areas, activities, created_at"
+        : cardKind === "sport-club"
+          ? "id, club_name, sport, country, city, description, phone, address, website, training_schedule, age_groups, league, created_at"
+          : "id, company_name, industry, sub_industry, country, city, address, phone, other_locations, locations_description, description, offerings, offerings_description, website, created_at";
+
     let query = supabase
       .from(table)
-      .select("*")
+      .select(select)
       .order("created_at", { ascending: false })
       .limit(200);
 
@@ -86,7 +94,7 @@ export async function Directory({
     error = { message: err instanceof Error ? err.message : "Could not connect to Supabase." };
   }
 
-  const showingDemo = allowDemoFallback && !hasUserFilters && (Boolean(error) || businesses.length === 0);
+  const showingDemo = allowDemoFallback && !hasUserFilters && Boolean(error);
   const list = showingDemo ? DEMO_BUSINESSES : businesses;
 
   return (
@@ -194,6 +202,11 @@ export async function Directory({
             </Link>
             .
           </p>
+          {!hasUserFilters ? (
+            <p className="mt-3 text-xs text-slate-500">
+              New submissions are reviewed by an admin before they appear publicly.
+            </p>
+          ) : null}
         </Surface>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">

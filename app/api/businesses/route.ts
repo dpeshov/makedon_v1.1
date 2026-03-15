@@ -1,12 +1,16 @@
-﻿import { NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase/admin";
+import { NextResponse } from "next/server";
 import { INDUSTRIES } from "@/lib/industries";
 import { cleanText, isValidEmail, normalizeUrl } from "@/lib/validators";
+import { supabaseServer } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
+    const supabase = supabaseServer();
+    const { data } = await supabase.auth.getUser();
+    if (!data.user) return NextResponse.json({ error: "Please sign in to submit." }, { status: 401 });
+
     const body = await req.json();
 
     const company_name = cleanText(body.company_name, 120);
@@ -40,8 +44,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Please select a valid industry." }, { status: 400 });
     }
 
-    const supabase = supabaseAdmin();
     const { error } = await supabase.from("businesses").insert({
+      user_id: data.user.id,
       company_name,
       owner_name,
       country,
@@ -56,15 +60,14 @@ export async function POST(req: Request) {
       offerings: offerings || null,
       offerings_description: offerings_description || null,
       website: website || null,
-      email
+      email,
+      approval_status: "pending"
     });
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 }
+
