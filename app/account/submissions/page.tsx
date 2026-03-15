@@ -16,7 +16,7 @@ function StatusPill({ status }: { status: string }) {
 }
 
 export default async function SubmissionsPage() {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
   const { data } = await supabase.auth.getUser();
   if (!data.user) {
     return (
@@ -151,4 +151,3 @@ export default async function SubmissionsPage() {
     </div>
   );
 }
-

@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
-    const supabase = supabaseServer();
+    const supabase = await supabaseServer();
     const { data } = await supabase.auth.getUser();
     if (!data.user) return NextResponse.json({ error: "Please sign in to submit." }, { status: 401 });
 
@@ -60,4 +60,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 }
-

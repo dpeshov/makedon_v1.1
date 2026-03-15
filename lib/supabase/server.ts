@@ -8,6 +8,8 @@ function requiredEnv(name: string): string {
 }
 
 export async function supabaseServer() {
+  // Next.js 16 types `cookies()` as async in many contexts, while older versions are sync.
+  // `await` works for both and prevents "Promise cookieStore" type errors.
   const cookieStore = await cookies();
   const url = requiredEnv("NEXT_PUBLIC_SUPABASE_URL");
   const anonKey = requiredEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY");
@@ -18,9 +20,11 @@ export async function supabaseServer() {
         return cookieStore.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) =>
-          cookieStore.set(name, value, options)
-        );
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        } catch {
+          // In Server Components, Next may prevent setting cookies. Middleware handles session refresh.
+        }
       }
     }
   });

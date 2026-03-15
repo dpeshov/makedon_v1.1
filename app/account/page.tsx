@@ -6,7 +6,7 @@ import { ButtonLink } from "@/ui/Button";
 export const dynamic = "force-dynamic";
 
 async function getProfile() {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
   const { data } = await supabase.auth.getUser();
   const user = data.user;
   if (!user) return { user: null, profile: null };

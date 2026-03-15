@@ -61,7 +61,7 @@ export async function Directory({
   let error: { message: string } | null = null;
 
   try {
-    const supabase = supabaseServer();
+    const supabase = await supabaseServer();
 
     const select =
       cardKind === "cultural-club"

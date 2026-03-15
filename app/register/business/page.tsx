@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 export default async function RegisterBusinessPage() {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
   const { data } = await supabase.auth.getUser();
   if (!data.user) {
     return (
@@ -50,4 +50,3 @@ export default async function RegisterBusinessPage() {
     </div>
   );
 }
-

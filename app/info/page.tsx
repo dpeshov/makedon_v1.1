@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 async function getTableStatus(table: "businesses" | "cultural_clubs" | "sport_clubs") {
   try {
-    const supabase = supabaseServer();
+    const supabase = await supabaseServer();
     const res = await supabase.from(table).select("id").limit(1);
     if (res.error) return { ok: false, message: res.error.message };
     return { ok: true, message: "OK" };
@@ -105,4 +105,3 @@ export default async function InfoPage() {
     </div>
   );
 }
-

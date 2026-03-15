@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 type Table = "businesses" | "cultural_clubs" | "sport_clubs";
 
 async function requireAdmin() {
-  const supabase = supabaseServer();
+  const supabase = await supabaseServer();
   const { data } = await supabase.auth.getUser();
   if (!data.user) return { supabase, user: null, isAdmin: false };
 
@@ -175,4 +175,3 @@ export default async function AdminPage() {
     </div>
   );
 }
-
