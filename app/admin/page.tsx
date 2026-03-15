@@ -61,7 +61,8 @@ async function setApproval(table: Table, id: string, next: "approved" | "rejecte
       ? { approval_status: "approved", approved_at: new Date().toISOString(), approved_by: user.id }
       : { approval_status: "rejected", approved_at: null, approved_by: user.id };
 
-  const res = await supabase.from(table).update(patch).eq("id", id);
+  const client = supabase as any;
+  const res = await client.from(table as string).update(patch).eq("id", id);
   if (res.error) throw new Error(res.error.message);
 
   revalidatePath("/admin");

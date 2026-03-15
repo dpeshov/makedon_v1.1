@@ -7,7 +7,8 @@ export const dynamic = "force-dynamic";
 async function getTableStatus(table: "businesses" | "cultural_clubs" | "sport_clubs") {
   try {
     const supabase = await supabaseServer();
-    const res = await supabase.from(table).select("id").limit(1);
+    const client = supabase as any;
+    const res = await client.from(table as string).select("id").limit(1);
     if (res.error) return { ok: false, message: res.error.message };
     return { ok: true, message: "OK" };
   } catch (err) {

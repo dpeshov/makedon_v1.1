@@ -62,16 +62,23 @@ export async function Directory({
 
   try {
     const supabase = await supabaseServer();
+    const client = supabase as any;
+    const tableName = table as string;
 
-    const select =
-      cardKind === "cultural-club"
-        ? "id, club_name, country, city, description, phone, address, website, focus_areas, activities, created_at"
-        : cardKind === "sport-club"
-          ? "id, club_name, sport, country, city, description, phone, address, website, training_schedule, age_groups, league, created_at"
-          : "id, company_name, industry, sub_industry, country, city, address, phone, other_locations, locations_description, description, offerings, offerings_description, website, created_at";
+    let select: string =
+      "id, company_name, industry, sub_industry, country, city, address, phone, other_locations, locations_description, description, offerings, offerings_description, website, created_at";
 
-    let query = supabase
-      .from(table)
+    if (cardKind === "cultural-club") {
+      select = "id, club_name, country, city, description, phone, address, website, focus_areas, activities, created_at";
+    }
+
+    if (cardKind === "sport-club") {
+      select =
+        "id, club_name, sport, country, city, description, phone, address, website, training_schedule, age_groups, league, created_at";
+    }
+
+    let query = client
+      .from(tableName)
       .select(select)
       .order("created_at", { ascending: false })
       .limit(200);
