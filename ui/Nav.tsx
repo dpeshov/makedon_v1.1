@@ -1,4 +1,11 @@
-﻿import Link from "next/link";
+import Link from "next/link";
+
+function formatBuildDate(value?: string) {
+  if (!value) return "";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return value;
+  return parsed.toISOString().slice(0, 10);
+}
 
 function NavLink({ href, label }: { href: string; label: string }) {
   return (
@@ -12,12 +19,29 @@ function NavLink({ href, label }: { href: string; label: string }) {
 }
 
 export function Nav() {
+  const version = process.env.NEXT_PUBLIC_APP_VERSION;
+  const buildDate = formatBuildDate(process.env.NEXT_PUBLIC_BUILD_DATE);
+  const buildSha = process.env.NEXT_PUBLIC_BUILD_SHA;
+  const showMeta = Boolean(version || buildDate);
+
   return (
-    <nav className="flex items-center gap-1">
-      <NavLink href="/" label="Home" />
-      <NavLink href="/register" label="Register" />
-      <NavLink href="/about" label="About" />
+    <nav className="flex items-center gap-3">
+      {showMeta ? (
+        <div
+          className="hidden items-center gap-2 text-xs font-semibold text-slate-500 sm:flex"
+          title={buildSha ? `Build: ${buildSha}` : undefined}
+        >
+          {version ? <span>v{version}</span> : null}
+          {version && buildDate ? <span className="text-slate-300">•</span> : null}
+          {buildDate ? <span>{buildDate}</span> : null}
+        </div>
+      ) : null}
+
+      <div className="flex items-center gap-1">
+        <NavLink href="/" label="Home" />
+        <NavLink href="/register" label="Register" />
+        <NavLink href="/about" label="About" />
+      </div>
     </nav>
   );
 }
-
