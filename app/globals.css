@@ -18,6 +18,8 @@ body {
 }
 
 body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   color: var(--text);
   background:
     radial-gradient(70rem 40rem at 0% 0%, rgba(210, 0, 0, 0.18), transparent 55%),

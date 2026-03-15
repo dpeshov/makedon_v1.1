@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+import { ButtonLink } from "@/ui/Button";
+import { Surface } from "@/ui/Surface";
 
 type BusinessPublic = {
   id: string;
@@ -20,7 +21,7 @@ type BusinessPublic = {
 function Row({ label, value }: { label: string; value: string | null | undefined }) {
   if (!value) return null;
   return (
-    <p className="mt-1 text-sm text-slate-700">
+    <p className="mt-1 text-sm text-slate-600">
       <span className="font-medium text-slate-800">{label}:</span> {value}
     </p>
   );
@@ -28,14 +29,14 @@ function Row({ label, value }: { label: string; value: string | null | undefined
 
 export function BusinessCard({ business }: { business: BusinessPublic }) {
   return (
-    <article className="rounded-2xl border border-brand-red/20 bg-white/75 p-5 shadow-sm backdrop-blur">
+    <Surface className="group p-5 transition hover:-translate-y-0.5 hover:shadow-md">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h3 className="truncate text-lg font-semibold tracking-tight text-slate-900">{business.company_name}</h3>
           <p className="mt-1 text-sm text-slate-600">
-            <span className="font-medium text-slate-800">{business.industry}</span>
-            {business.sub_industry ? <span className="text-slate-500"> ({business.sub_industry})</span> : null}
-            <span className="px-2 text-slate-300">•</span>
+            <span className="font-medium text-slate-900">{business.industry}</span>
+            {business.sub_industry ? <span className="text-slate-500"> · {business.sub_industry}</span> : null}
+            <span className="mx-2 text-slate-300">•</span>
             <span>
               {business.city}, {business.country}
             </span>
@@ -43,14 +44,16 @@ export function BusinessCard({ business }: { business: BusinessPublic }) {
         </div>
 
         {business.website ? (
-          <Link
+          <ButtonLink
             href={business.website}
             target="_blank"
             rel="noreferrer"
-            className="shrink-0 rounded-full border border-brand-red/20 bg-white px-3 py-1.5 text-sm font-semibold text-brand-red hover:bg-brand-yellow/25 hover:border-brand-red/30"
+            variant="secondary"
+            size="sm"
+            className="shrink-0"
           >
             Website
-          </Link>
+          </ButtonLink>
         ) : null}
       </div>
 
@@ -64,7 +67,7 @@ export function BusinessCard({ business }: { business: BusinessPublic }) {
       <p className="mt-3 text-sm leading-6 text-slate-700">{business.description}</p>
 
       {business.offerings ? (
-        <div className="mt-3 rounded-xl border border-brand-red/10 bg-brand-yellow/10 px-4 py-3">
+        <div className="mt-4 rounded-2xl border border-slate-900/10 bg-white/50 px-4 py-3">
           <p className="text-sm font-semibold text-slate-900">Products / services</p>
           <p className="mt-1 text-sm text-slate-700">{business.offerings}</p>
           {business.offerings_description ? (
@@ -72,6 +75,7 @@ export function BusinessCard({ business }: { business: BusinessPublic }) {
           ) : null}
         </div>
       ) : null}
-    </article>
+
+    </Surface>
   );
 }

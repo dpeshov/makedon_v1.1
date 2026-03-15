@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { INDUSTRIES } from "@/lib/industries";
+import { Button } from "@/ui/Button";
+import { Surface } from "@/ui/Surface";
 
 type RegisterKind = "business" | "cultural-club" | "sport-club";
 
@@ -118,7 +120,7 @@ export function RegisterForm({ kind = "business" }: { kind?: RegisterKind }) {
   }
 
   function inputClassName() {
-    return "mt-1 w-full rounded-xl border border-brand-red/20 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-0 placeholder:text-slate-400 focus:border-brand-yellow focus:ring-4 focus:ring-brand-yellow/30";
+    return "mt-1 w-full rounded-2xl border border-slate-900/10 bg-white/70 px-3 py-2 text-sm text-slate-900 shadow-sm outline-none ring-0 placeholder:text-slate-400 focus:border-brand-yellow/60 focus:ring-4 focus:ring-brand-yellow/25";
   }
 
   function labelClassName() {
@@ -126,11 +128,9 @@ export function RegisterForm({ kind = "business" }: { kind?: RegisterKind }) {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="mt-6 rounded-2xl border border-brand-red/20 bg-white/75 p-5 shadow-sm backdrop-blur"
-    >
-      <div className="grid gap-4 sm:grid-cols-2">
+    <Surface className="p-5 sm:p-6">
+      <form onSubmit={onSubmit}>
+        <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelClassName()}>
             {cfg.nameLabel}
@@ -259,9 +259,9 @@ export function RegisterForm({ kind = "business" }: { kind?: RegisterKind }) {
             />
           </label>
         </div>
-      </div>
+        </div>
 
-      <div className="mt-4">
+        <div className="mt-5">
         <label className={labelClassName()}>
           Short description
           <textarea
@@ -272,9 +272,9 @@ export function RegisterForm({ kind = "business" }: { kind?: RegisterKind }) {
             required
           />
         </label>
-      </div>
+        </div>
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelClassName()}>
             Other location(s) (optional)
@@ -297,9 +297,9 @@ export function RegisterForm({ kind = "business" }: { kind?: RegisterKind }) {
             />
           </label>
         </div>
-      </div>
+        </div>
 
-      <div className="mt-4">
+        <div className="mt-5">
         <label className={labelClassName()}>
           Products / services (optional)
           <input
@@ -309,9 +309,9 @@ export function RegisterForm({ kind = "business" }: { kind?: RegisterKind }) {
             placeholder="Example: Catering, web development, accounting"
           />
         </label>
-      </div>
+        </div>
 
-      <div className="mt-4">
+        <div className="mt-5">
         <label className={labelClassName()}>
           Products / services description (optional)
           <textarea
@@ -321,26 +321,23 @@ export function RegisterForm({ kind = "business" }: { kind?: RegisterKind }) {
             placeholder="A bit more detail about your main products or services."
           />
         </label>
-      </div>
-
-      {error ? (
-        <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
-          {error}
         </div>
-      ) : null}
 
-      <div className="mt-5 flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={!canSubmit || pending}
-          className="rounded-full bg-brand-red px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-red/90 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {pending ? "Submitting..." : `Submit ${cfg.title}`}
-        </button>
-        <p className="text-xs text-slate-500">
-          Email/owner name are stored for contact. They are not shown on the public directory in this MVP.
-        </p>
-      </div>
-    </form>
+        {error ? (
+          <div className="mt-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+            {error}
+          </div>
+        ) : null}
+
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <Button type="submit" disabled={!canSubmit || pending}>
+            {pending ? "Submitting..." : `Submit ${cfg.title}`}
+          </Button>
+          <p className="text-xs leading-5 text-slate-500 sm:max-w-lg">
+            Email and owner/contact name are stored for contact, but they are not shown publicly in this MVP.
+          </p>
+        </div>
+      </form>
+    </Surface>
   );
 }

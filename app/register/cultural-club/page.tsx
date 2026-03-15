@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Surface } from "@/ui/Surface";
 import { RegisterForm } from "@/ui/RegisterForm";
 
 export const metadata = {
@@ -7,8 +8,8 @@ export const metadata = {
 
 export default function RegisterCulturalClubPage() {
   return (
-    <div className="py-10">
-      <div className="rounded-3xl border border-brand-red/20 bg-white/75 p-7 shadow-sm backdrop-blur">
+    <div className="flex flex-col gap-6">
+      <Surface className="p-7 sm:p-10">
         <h1 className="text-3xl font-semibold tracking-tight text-slate-900 [font-family:var(--font-heading)]">
           Register a cultural club
         </h1>
@@ -22,7 +23,7 @@ export default function RegisterCulturalClubPage() {
           </Link>
           .
         </p>
-      </div>
+      </Surface>
 
       <RegisterForm kind="cultural-club" />
     </div>

@@ -27,28 +27,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${heading.variable} ${body.variable}`}>
       <body className="min-h-dvh font-sans [font-family:var(--font-body)]">
-        <header className="border-b border-brand-red/20 bg-white/70 backdrop-blur">
+        <header className="sticky top-0 z-40 border-b border-slate-900/10 bg-white/65 backdrop-blur supports-[backdrop-filter]:bg-white/55">
           <Container>
-            <div className="flex items-center justify-between py-4">
+            <div className="relative flex items-center justify-between py-3">
               <Link
                 href="/"
-                className="text-base font-semibold tracking-tight text-brand-red [font-family:var(--font-heading)]"
+                className="group inline-flex items-center gap-2 text-base font-semibold tracking-tight text-slate-900 [font-family:var(--font-heading)]"
               >
-                Macedonian Diaspora Business Register
+                <span className="grid h-8 w-8 place-items-center rounded-2xl bg-brand-red text-white shadow-sm">
+                  <span className="text-sm font-bold leading-none">M</span>
+                </span>
+                <span className="hidden sm:inline">Macedonian Diaspora Register</span>
+                <span className="sm:hidden">Diaspora Register</span>
               </Link>
               <Nav />
             </div>
           </Container>
         </header>
 
-        <main>
+        <main className="pb-10 pt-6 sm:pt-10">
           <Container>{children}</Container>
         </main>
 
-        <footer className="mt-16 border-t border-brand-red/20 bg-white/70">
+        <footer className="mt-12 border-t border-slate-900/10 bg-white/55 backdrop-blur supports-[backdrop-filter]:bg-white/45">
           <Container>
-            <div className="py-8 text-sm text-slate-700">
-              Built as an MVP to connect Macedonian diaspora businesses worldwide.
+            <div className="flex flex-col gap-2 py-8 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between">
+              <p>Built as an MVP to connect Macedonian diaspora communities worldwide.</p>
+              <p className="text-xs text-slate-500">Businesses • Cultural clubs • Sport clubs</p>
             </div>
           </Container>
         </footer>
