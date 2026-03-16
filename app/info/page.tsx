@@ -103,6 +103,15 @@ export default async function InfoPage() {
           <ButtonLink href="/account">Account</ButtonLink>
         </div>
       </Surface>
+
+      <Surface className="p-5 sm:p-6">
+        <h2 className="text-lg font-semibold text-slate-900">Email confirmation links</h2>
+        <p className="mt-3 text-sm leading-6 text-slate-700">
+          If the confirmation link opens <span className="font-mono">localhost</span>, update Supabase Auth settings:
+          Authentication → URL Configuration → set the correct Site URL and add Redirect URLs for your deployed domain
+          (including <span className="font-mono">/auth/callback</span>).
+        </p>
+      </Surface>
     </div>
   );
 }

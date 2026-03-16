@@ -1,18 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { Button } from "@/ui/Button";
 import { Surface } from "@/ui/Surface";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialError = searchParams.get("error");
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(initialError);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -23,8 +25,14 @@ export default function LoginPage() {
       if (!supabase) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY env vars.");
 
       if (mode === "signup") {
-        const res = await supabase.auth.signUp({ email, password });
+        const emailRedirectTo = `${window.location.origin}/auth/callback?next=/account`;
+        const res = await supabase.auth.signUp({ email, password, options: { emailRedirectTo } });
         if (res.error) throw res.error;
+        // If email confirmations are enabled, Supabase may not return a session yet.
+        if (!res.data.session) {
+          setError("Account created. Please check your email and click the confirmation link to finish sign up.");
+          return;
+        }
       } else {
         const res = await supabase.auth.signInWithPassword({ email, password });
         if (res.error) throw res.error;

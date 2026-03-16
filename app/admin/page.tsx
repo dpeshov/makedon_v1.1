@@ -126,6 +126,39 @@ export default async function AdminPage() {
           Admin approvals
         </h1>
         <p className="mt-2 text-sm text-slate-600">Approve or reject pending submissions.</p>
+
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <Surface className="p-5">
+            <p className="text-sm font-semibold text-slate-900">Businesses</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-900">{res.pending.businesses.length}</p>
+            <p className="mt-1 text-xs text-slate-500">Pending</p>
+            <div className="mt-4">
+              <ButtonLink href="/admin/businesses?status=pending" variant="secondary" size="sm">
+                View all
+              </ButtonLink>
+            </div>
+          </Surface>
+          <Surface className="p-5">
+            <p className="text-sm font-semibold text-slate-900">Cultural clubs</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-900">{res.pending.cultural.length}</p>
+            <p className="mt-1 text-xs text-slate-500">Pending</p>
+            <div className="mt-4">
+              <ButtonLink href="/admin/cultural-clubs?status=pending" variant="secondary" size="sm">
+                View all
+              </ButtonLink>
+            </div>
+          </Surface>
+          <Surface className="p-5">
+            <p className="text-sm font-semibold text-slate-900">Sport clubs</p>
+            <p className="mt-1 text-2xl font-semibold text-slate-900">{res.pending.sport.length}</p>
+            <p className="mt-1 text-xs text-slate-500">Pending</p>
+            <div className="mt-4">
+              <ButtonLink href="/admin/sport-clubs?status=pending" variant="secondary" size="sm">
+                View all
+              </ButtonLink>
+            </div>
+          </Surface>
+        </div>
       </Surface>
 
       <Surface className="p-5 sm:p-6">
