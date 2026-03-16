@@ -1,12 +1,18 @@
 import { NextResponse } from "next/server";
 import { cleanText, isValidEmail, normalizeUrl } from "@/lib/validators";
-import { supabaseServer } from "@/lib/supabase/server";
+import { supabaseServerOptional } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {
-    const supabase = await supabaseServer();
+    const supabase = await supabaseServerOptional();
+    if (!supabase) {
+      return NextResponse.json(
+        { error: "Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY." },
+        { status: 500 }
+      );
+    }
     const { data } = await supabase.auth.getUser();
     if (!data.user) return NextResponse.json({ error: "Please sign in to submit." }, { status: 401 });
 
@@ -56,7 +62,8 @@ export async function POST(req: Request) {
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "Invalid request.";
+    return NextResponse.json({ error: msg }, { status: 400 });
   }
 }

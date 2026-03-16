@@ -1,24 +1,26 @@
 import { revalidatePath } from "next/cache";
-import { supabaseServer } from "@/lib/supabase/server";
+import { supabaseServerOptional } from "@/lib/supabase/server";
 import { Surface } from "@/ui/Surface";
-import { Button } from "@/ui/Button";
+import { Button, ButtonLink } from "@/ui/Button";
 
 export const dynamic = "force-dynamic";
 
 type Table = "businesses" | "cultural_clubs" | "sport_clubs";
 
 async function requireAdmin() {
-  const supabase = await supabaseServer();
+  const supabase = await supabaseServerOptional();
+  if (!supabase) return { supabase: null as any, user: null, isAdmin: false, envMissing: true as const };
   const { data } = await supabase.auth.getUser();
-  if (!data.user) return { supabase, user: null, isAdmin: false };
+  if (!data.user) return { supabase, user: null, isAdmin: false, envMissing: false as const };
 
   const profileRes = await supabase.from("profiles").select("role").eq("id", data.user.id).maybeSingle();
-  return { supabase, user: data.user, isAdmin: profileRes.data?.role === "admin" };
+  return { supabase, user: data.user, isAdmin: profileRes.data?.role === "admin", envMissing: false as const };
 }
 
 async function loadPending() {
-  const { supabase, user, isAdmin } = await requireAdmin();
-  if (!user || !isAdmin) return { allowed: false as const, pending: null as any };
+  const { supabase, user, isAdmin, envMissing } = await requireAdmin();
+  if (envMissing) return { allowed: false as const, reason: "env" as const, pending: null as any };
+  if (!user || !isAdmin) return { allowed: false as const, reason: "auth" as const, pending: null as any };
 
   const [businesses, cultural, sport] = await Promise.all([
     supabase
@@ -55,6 +57,7 @@ async function setApproval(table: Table, id: string, next: "approved" | "rejecte
   "use server";
   const { supabase, user, isAdmin } = await requireAdmin();
   if (!user || !isAdmin) throw new Error("Unauthorized");
+  if (!supabase) throw new Error("Supabase is not configured.");
 
   const patch =
     next === "approved"
@@ -96,7 +99,22 @@ export default async function AdminPage() {
         <h1 className="text-3xl font-semibold tracking-tight text-slate-900 [font-family:var(--font-heading)]">
           Admin approvals
         </h1>
-        <p className="mt-3 text-slate-700">You must be signed in as an admin to view this page.</p>
+        {res.reason === "env" ? (
+          <>
+            <p className="mt-3 text-slate-700">Supabase is not configured for this deployment.</p>
+            <p className="mt-2 text-sm text-slate-600">
+              Missing env vars: <span className="font-mono">NEXT_PUBLIC_SUPABASE_URL</span> and{" "}
+              <span className="font-mono">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>
+            </p>
+            <div className="mt-6">
+              <ButtonLink href="/info" variant="primary">
+                Setup checklist
+              </ButtonLink>
+            </div>
+          </>
+        ) : (
+          <p className="mt-3 text-slate-700">You must be signed in as an admin to view this page.</p>
+        )}
       </Surface>
     );
   }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Surface } from "@/ui/Surface";
 import { RegisterForm } from "@/ui/RegisterForm";
-import { supabaseServer } from "@/lib/supabase/server";
+import { supabaseServerOptional } from "@/lib/supabase/server";
 import { ButtonLink } from "@/ui/Button";
 
 export const metadata = {
@@ -9,7 +9,29 @@ export const metadata = {
 };
 
 export default async function RegisterSportClubPage() {
-  const supabase = await supabaseServer();
+  const supabase = await supabaseServerOptional();
+  if (!supabase) {
+    return (
+      <Surface className="p-7 sm:p-10">
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900 [font-family:var(--font-heading)]">
+          Register a sport club
+        </h1>
+        <p className="mt-3 text-slate-700">Supabase is not configured for this deployment.</p>
+        <p className="mt-2 text-sm text-slate-600">
+          Missing env vars: <span className="font-mono">NEXT_PUBLIC_SUPABASE_URL</span> and{" "}
+          <span className="font-mono">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <ButtonLink href="/info" variant="primary">
+            Setup checklist
+          </ButtonLink>
+          <ButtonLink href="/sport-clubs" variant="secondary">
+            View sport clubs
+          </ButtonLink>
+        </div>
+      </Surface>
+    );
+  }
   const { data } = await supabase.auth.getUser();
   if (!data.user) {
     return (

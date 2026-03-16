@@ -25,7 +25,42 @@ async function getProfile() {
 }
 
 export default async function AccountPage() {
-  const { user, profile } = await getProfile();
+  let user: Awaited<ReturnType<typeof getProfile>>["user"] = null;
+  let profile: Awaited<ReturnType<typeof getProfile>>["profile"] = null;
+  let envError: string | null = null;
+
+  try {
+    const res = await getProfile();
+    user = res.user;
+    profile = res.profile;
+  } catch (err) {
+    envError = err instanceof Error ? err.message : "Could not connect to Supabase.";
+  }
+
+  if (envError) {
+    return (
+      <Surface className="p-7 sm:p-10">
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900 [font-family:var(--font-heading)]">
+          Account
+        </h1>
+        <p className="mt-3 text-slate-700">Supabase is not configured for this deployment.</p>
+        <p className="mt-2 text-sm text-slate-600">
+          Missing env vars: <span className="font-mono">NEXT_PUBLIC_SUPABASE_URL</span> and{" "}
+          <span className="font-mono">NEXT_PUBLIC_SUPABASE_ANON_KEY</span>
+        </p>
+        <p className="mt-2 text-xs text-slate-500">{envError}</p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <ButtonLink href="/info" variant="primary">
+            Setup checklist
+          </ButtonLink>
+          <ButtonLink href="/" variant="secondary">
+            Home
+          </ButtonLink>
+        </div>
+      </Surface>
+    );
+  }
+
   if (!user) {
     return (
       <Surface className="p-7 sm:p-10">
