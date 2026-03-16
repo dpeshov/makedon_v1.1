@@ -8,7 +8,6 @@ import { Surface } from "@/ui/Surface";
 
 export default function LoginPage() {
   const router = useRouter();
-  const supabase = supabaseBrowser();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +19,9 @@ export default function LoginPage() {
     setError(null);
     setPending(true);
     try {
+      const supabase = supabaseBrowser();
+      if (!supabase) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY env vars.");
+
       if (mode === "signup") {
         const res = await supabase.auth.signUp({ email, password });
         if (res.error) throw res.error;
@@ -92,4 +94,3 @@ export default function LoginPage() {
     </Surface>
   );
 }
-

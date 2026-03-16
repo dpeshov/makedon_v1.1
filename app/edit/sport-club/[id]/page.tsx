@@ -44,6 +44,10 @@ export default function EditSportClubPage() {
     let cancelled = false;
     async function run() {
       setError(null);
+      if (!supabase) {
+        setError("Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY env vars.");
+        return;
+      }
       const res = await supabase
         .from("sport_clubs")
         .select(
@@ -67,6 +71,7 @@ export default function EditSportClubPage() {
     setPending(true);
     setError(null);
     try {
+      if (!supabase) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY env vars.");
       const res = await supabase
         .from("sport_clubs")
         .update({
@@ -198,4 +203,3 @@ export default function EditSportClubPage() {
     </Surface>
   );
 }
-

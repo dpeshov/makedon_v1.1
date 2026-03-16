@@ -45,6 +45,10 @@ export default function EditBusinessPage() {
     let cancelled = false;
     async function run() {
       setError(null);
+      if (!supabase) {
+        setError("Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY env vars.");
+        return;
+      }
       const res = await supabase
         .from("businesses")
         .select(
@@ -65,6 +69,10 @@ export default function EditBusinessPage() {
   async function onSave(e: React.FormEvent) {
     e.preventDefault();
     if (!row) return;
+    if (!supabase) {
+      setError("Missing NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY env vars.");
+      return;
+    }
     setPending(true);
     setError(null);
     try {
@@ -194,4 +202,3 @@ export default function EditBusinessPage() {
     </Surface>
   );
 }
-
